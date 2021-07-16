@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "nintendo-switch-eshop": "^6.0.1",
+    "sqlite3": "^5.0.2",
     "tslib": "^2.3.0"
   }
 }
