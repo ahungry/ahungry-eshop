@@ -1,0 +1,15 @@
+{
+  "name": "eshop",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "nintendo-switch-eshop": "^6.0.1",
+    "tslib": "^2.3.0"
+  }
+}
