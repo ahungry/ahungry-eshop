@@ -5,28 +5,40 @@ const db = new sqlite3.Database('./games.db')
 
 const app = express()
 
+app.use(express.static('public'))
+
 app.get('/games', function (req, res) {
+  const limit = req.query.limit || 10
+  const offset = req.query.offset || 0
   const records = []
 
-  db.each("SELECT * FROM games ORDER BY msrp DESC LIMIT 5", function (err, row) {
-    records.push(row)
-  }, (e, r) => {
-    console.warn('The rows are done')
-    console.warn('records: ', { records })
+  db.each("SELECT * FROM games ORDER BY msrp DESC LIMIT ? OFFSET ?",
+          [limit, offset],
+          function (err, row) {
+            records.push(row)
+          }, (e, r) => {
+            console.warn('The rows are done')
+            console.warn('records: ', { records })
 
-    let gamesHtml = records.reduce((acc, cur) => {
-      var html = pug.renderFile('game.pug', cur)
-      console.warn('record/html: ', { cur, html })
+            let gamesHtml = records.reduce((acc, cur) => {
+              var html = pug.renderFile('game.pug', cur)
+              console.warn('record/html: ', { cur, html })
 
-      return acc + html
-    }, '')
+              return acc + html
+            }, '')
 
-    console.warn('Game html: ', gamesHtml)
+            console.warn('Game html: ', gamesHtml)
 
-    var html = pug.renderFile('games.pug', { x: 1, y: gamesHtml, gamesHtml })
+            var html = pug.renderFile('games.pug', {
+              x: 1,
+              y: gamesHtml,
+              gamesHtml,
+              offsetPrev: Number(offset) - Number(limit),
+              offsetNext: Number(offset) + Number(limit),
+            })
 
-    res.send(html)
-  })
+            res.send(html)
+          })
 })
 
 app.get('/game', function (req, res) {
