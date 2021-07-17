@@ -1,5 +1,5 @@
 {
-  lastModified: 1624347128869,
+        lastModified: 1624347128869,
 	title: 'Aery - Little Bird Adventure',
 	description: 'Aery is a peaceful exploration game from the perspective of a little bird who decided to discover the world. Calm down from the hassle of your daily life, experience the feeling of flying and immerse into beautiful and atmospheric landscapes. It is a great game for relaxing and calming down after an exhausting day full of hassle.',
 	url: '/games/detail/aery-little-bird-adventure-switch/',

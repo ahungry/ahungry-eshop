@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "serve": "nodemon server.js",
+    "serve": "nodemon --ext '*' server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

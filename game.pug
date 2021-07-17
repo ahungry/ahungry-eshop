@@ -1,4 +1,17 @@
 div
-  h1 Some game
-  p This is very interesting...
-  foo snippet: !{foo}
+  h1 #{title}
+
+  img(src=horizontalHeaderImage, width=400)
+
+  p(style={'font-size': '10px'}) #{description}
+
+  if boxart
+    img(src=boxart, width=200)
+  else
+    img(src=horizontalHeaderImage, width=100)
+
+  div
+    div MSRP: #{msrp}
+    div salePrice: #{salePrice}
+
+    // #{foo}
