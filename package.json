@@ -9,7 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.17.1",
     "nintendo-switch-eshop": "^6.0.1",
+    "pug": "^3.0.2",
     "sqlite3": "^5.0.2",
     "tslib": "^2.3.0"
   }
