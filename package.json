@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "serve": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -11,6 +12,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "nintendo-switch-eshop": "^6.0.1",
+    "nodemon": "^2.0.12",
     "pug": "^3.0.2",
     "sqlite3": "^5.0.2",
     "tslib": "^2.3.0"

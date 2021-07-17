@@ -6,11 +6,13 @@ html(lang="en")
       if (foo) bar(1 + 5)
   body
     h1 Pug - node template engine
+    include game
     #container.col
       if youAreUsingPug
         p You are amazing
       else
         p Get on it!
       p.
+        foo top: #{foo}
         Pug is a terse and simple templating language with a
         strong focus on performance and powerful features.

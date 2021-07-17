@@ -4,7 +4,13 @@ const pug = require('pug')
 const app = express()
 
 app.get('/', function (req, res) {
-  var html = pug.renderFile('home.pug', {});
+  // var game = pug.renderFile('game.pug')
+  var html = pug.renderFile(
+    'home.pug',
+    {
+      foo: '<b>woot</b>',
+      youAreUsingPug: true,
+    });
   res.send(html)
 })
 
