@@ -37,5 +37,5 @@ select title, msrp, salePrice, availability, datetime(substr(lastModified, 0, 11
 
 Get the best deals on games:
 ```sh
-select title, msrp, salePrice, 1 - (cast(salePrice as float)/cast(msrp as float)) AS percent_off FROM games WHERE salePrice > 0 ORDER BY 1-(cast(salePrice as float) / cast(msrp as float)) desc LIMIT 30;
+select title, msrp, salePrice, 1 - (cast(salePrice as float)/cast(msrp as float)) AS percent_off, 'https://nintendo.com' || url FROM games WHERE salePrice > 0 ORDER BY 1-(cast(salePrice as float) / cast(msrp as float)) desc LIMIT 30;
 ```
