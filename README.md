@@ -23,7 +23,14 @@ sqlite3 games.db # Start querying!
 
 Useful query stuff:
 
+See a random sample:
+
 ```sh
 .mode line
 select * from games limit 3;
+```
+
+Get the most recently updated games in a pretty box:
+```sh
+select title, msrp, salePrice, availability, datetime(substr(lastModified, 0, 11), 'unixepoch', 'localtime') from games WHERE lastModified ORDER BY lastModified DESC LIMIT 30;
 ```
