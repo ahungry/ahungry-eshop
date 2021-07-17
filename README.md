@@ -35,7 +35,16 @@ Get the most recently updated games in a pretty box:
 select title, msrp, salePrice, availability, datetime(substr(lastModified, 0, 11), 'unixepoch', 'localtime') from games WHERE lastModified ORDER BY lastModified DESC LIMIT 30;
 ```
 
-Get the best deals on games:
+Get the best deals on games by percent off:
 ```sh
 select title, msrp, salePrice, 1 - (cast(salePrice as float)/cast(msrp as float)) AS percent_off, 'https://nintendo.com' || url FROM games WHERE salePrice > 0 ORDER BY 1-(cast(salePrice as float) / cast(msrp as float)) desc LIMIT 30;
+```
+
+See the biggest savings by $ value:
+```sh
+select title, msrp, salePrice, 1 - (cast(salePrice as float)/cast(msrp
+as float)) AS percent_off, (cast(msrp as float) - cast(salePrice as
+float)) as savings, 'https://nintendo.com' || url FROM games WHERE
+salePrice > 0 ORDER BY (cast(msrp as float) - cast(salePrice as
+float)) desc LIMIT 30;
 ```
