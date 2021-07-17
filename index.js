@@ -37,6 +37,11 @@ void async function main () {
 
     db.run(`CREATE TABLE games (${fieldSql})`)
 
+    // https://stackoverflow.com/questions/1711631/improve-insert-per-second-performance-of-sqlite
+    // Wrapping many inserts in a single transaction changes
+    // insert time from 10+ minutes for 5000 records, to less than 10 seconds.
+    db.run('BEGIN TRANSACTION')
+
     const stmtSql = fields.map(_ => '?').join(',')
 
     var stmt = db.prepare(`INSERT INTO games VALUES (${stmtSql})`)
@@ -57,6 +62,7 @@ void async function main () {
     })
 
     stmt.finalize()
+    db.run('END TRANSACTION')
 
   })
 
