@@ -16,7 +16,20 @@ const log = console.error
 
 void async function main () {
   log('Importing games, this may take awhile...')
-  const res = require('./data.json')
+  // Map across and normalize the records, they aren't consistent otherwise
+  const res = require('./data.json').map(record => {
+    const {
+      lastModified, title, description, url, boxard, horizontalHeaderImage, platform,
+      releaseDateDisplay, esrbRating, numOfPlayers, genres, publishers, developers,
+      generalFilters, playerFilters, priceRange, msrp, salePrice, lowestPrice, availability,
+          } = record
+
+    return {
+      lastModified, title, description, url, boxard, horizontalHeaderImage, platform,
+      releaseDateDisplay, esrbRating, numOfPlayers, genres, publishers, developers,
+      generalFilters, playerFilters, priceRange, msrp, salePrice, lowestPrice, availability,
+    }
+  })
   const fields = Object.keys(res[0])
 
   db.serialize(function () {
