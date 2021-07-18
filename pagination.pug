@@ -1,5 +1,5 @@
 // Pagination stuff
 div(class='pagination')
-  a(href='?limit=10&offset=' + offsetPrev) prev
+  a(href='?limit=10&offset=' + offsetPrev + '&search=' + search) prev
   span page #{page} / #{total}
-  a(href='?limit=10&offset=' + offsetNext) next
+  a(href='?limit=10&offset=' + offsetNext + '&search=' + search) next

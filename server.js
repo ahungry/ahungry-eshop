@@ -12,32 +12,51 @@ app.get('/games', function (req, res) {
   log('Request to /games')
   const limit = Number(req.query.limit || 10)
   const offset = Number(req.query.offset || 0)
+  const search_title = req.query.search_title || ''
+  const search_publisher = req.query.search_publisher || ''
   const records = []
 
   db.all('select count(*) as count from games', (e, countRecords) => {
-    db.each("SELECT * FROM games ORDER BY cast(msrp as float) DESC LIMIT ? OFFSET ?",
-            [limit, offset],
-            function (err, row) {
-              records.push(row)
-            }, (e, r) => {
-              let gamesHtml = records.reduce((acc, cur) => {
-                var html = pug.renderFile('game.pug', cur)
+    db.each(
+      `
+SELECT *
+FROM games
+WHERE 1=1
+AND title like ?
+AND publishers like ?
+ORDER BY cast(msrp as float) DESC
+LIMIT ?
+OFFSET ?
+`,
+      [
+  '%' + search_title + '%',
+  '%' + search_publisher + '%',
+  limit,
+  offset,
+],
+      function (err, row) {
+        records.push(row)
+      }, (e, r) => {
+        let gamesHtml = records.reduce((acc, cur) => {
+          var html = pug.renderFile('game.pug', cur)
 
-                return acc + html
-              }, '')
+          return acc + html
+        }, '')
 
-              var html = pug.renderFile('games.pug', {
-                x: JSON.stringify(countRecords),
-                total: countRecords[0].count / limit,
-                y: gamesHtml,
-                gamesHtml,
-                offsetPrev: offset - limit,
-                offsetNext: offset + limit,
-                page: offset / limit,
-              })
+        var html = pug.renderFile('games.pug', {
+          x: JSON.stringify(countRecords),
+          total: countRecords[0].count / limit,
+          y: gamesHtml,
+          gamesHtml,
+          offsetPrev: offset - limit,
+          offsetNext: offset + limit,
+          page: offset / limit,
+          search_publisher,
+          search_title,
+        })
 
-              res.send(html)
-            })
+        res.send(html)
+      })
   })
 })
 

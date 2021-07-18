@@ -22,17 +22,25 @@ div.pagination a {
   text-decoration: none;
 }
 
-#container div.game {
+div.game {
   padding: 30px;
 }
 
-#container div.game img {
+div.game img {
   width: 200px;
 }
 
-#container div.game td {
+div.game td {
   border: 2px solid #222;
   font-size: 12px;
   padding: 14px;
   text-align: justify;
+}
+
+.search {
+  padding: 10px;
+}
+
+.search label {
+  font-size: 0.75em;
 }
