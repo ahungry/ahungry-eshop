@@ -35,6 +35,7 @@ app.get('/games', function (req, res) {
               gamesHtml,
               offsetPrev: Number(offset) - Number(limit),
               offsetNext: Number(offset) + Number(limit),
+              page: Number(offset) / Number(limit),
             })
 
             res.send(html)
