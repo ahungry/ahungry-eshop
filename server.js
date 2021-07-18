@@ -8,38 +8,41 @@ const app = express()
 app.use(express.static('public'))
 
 app.get('/games', function (req, res) {
-  const limit = req.query.limit || 10
-  const offset = req.query.offset || 0
+  const limit = Number(req.query.limit || 10)
+  const offset = Number(req.query.offset || 0)
   const records = []
 
-  db.each("SELECT * FROM games ORDER BY msrp DESC LIMIT ? OFFSET ?",
-          [limit, offset],
-          function (err, row) {
-            records.push(row)
-          }, (e, r) => {
-            console.warn('The rows are done')
-            console.warn('records: ', { records })
+  db.all('select count(*) as count from games', (e, countRecords) => {
+    db.each("SELECT * FROM games ORDER BY cast(msrp as float) DESC LIMIT ? OFFSET ?",
+            [limit, offset],
+            function (err, row) {
+              records.push(row)
+            }, (e, r) => {
+              console.warn('The rows are done')
+              console.warn('records: ', { records })
 
-            let gamesHtml = records.reduce((acc, cur) => {
-              var html = pug.renderFile('game.pug', cur)
-              console.warn('record/html: ', { cur, html })
+              let gamesHtml = records.reduce((acc, cur) => {
+                var html = pug.renderFile('game.pug', cur)
+                console.warn('record/html: ', { cur, html })
 
-              return acc + html
-            }, '')
+                return acc + html
+              }, '')
 
-            console.warn('Game html: ', gamesHtml)
+              console.warn('Game html: ', gamesHtml)
 
-            var html = pug.renderFile('games.pug', {
-              x: 1,
-              y: gamesHtml,
-              gamesHtml,
-              offsetPrev: Number(offset) - Number(limit),
-              offsetNext: Number(offset) + Number(limit),
-              page: Number(offset) / Number(limit),
+              var html = pug.renderFile('games.pug', {
+                x: JSON.stringify(countRecords),
+                total: countRecords[0].count / limit,
+                y: gamesHtml,
+                gamesHtml,
+                offsetPrev: offset - limit,
+                offsetNext: offset + limit,
+                page: offset / limit,
+              })
+
+              res.send(html)
             })
-
-            res.send(html)
-          })
+  })
 })
 
 app.get('/game', function (req, res) {

@@ -1,18 +1,21 @@
-div
+div(class='game')
   h1 #{title}
 
-  img(src=horizontalHeaderImage, width=400)
+  table
+    tr
+      td
+        if boxart
+          img(src=boxart)
+        else
+          img(src=horizontalHeaderImage, width=100)
 
-  p(style={'font-size': '10px'}) #{description}
+      td
+        p(style={'font-size': '12px'}) #{description}
 
-  if boxart
-    img(src=boxart, width=200)
-  else
-    img(src=horizontalHeaderImage, width=100)
+      td
+        div
+          div MSRP: #{msrp}
+          div salePrice: #{salePrice}
+          a(href='https://nintendo.com' + url, target='_blank') #{url}
 
-  div
-    div MSRP: #{msrp}
-    div salePrice: #{salePrice}
-    a(href='https://nintendo.com' + url, target='_blank') #{url}
-
-    // #{foo}
+          // #{foo}
