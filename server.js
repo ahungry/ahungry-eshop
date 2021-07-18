@@ -3,11 +3,13 @@ const pug = require('pug')
 const sqlite3 = require('sqlite3').verbose()
 const db = new sqlite3.Database('./games.db')
 
+const log = console.error
 const app = express()
 
 app.use(express.static('public'))
 
 app.get('/games', function (req, res) {
+  log('Request to /games')
   const limit = Number(req.query.limit || 10)
   const offset = Number(req.query.offset || 0)
   const records = []
@@ -18,17 +20,11 @@ app.get('/games', function (req, res) {
             function (err, row) {
               records.push(row)
             }, (e, r) => {
-              console.warn('The rows are done')
-              console.warn('records: ', { records })
-
               let gamesHtml = records.reduce((acc, cur) => {
                 var html = pug.renderFile('game.pug', cur)
-                console.warn('record/html: ', { cur, html })
 
                 return acc + html
               }, '')
-
-              console.warn('Game html: ', gamesHtml)
 
               var html = pug.renderFile('games.pug', {
                 x: JSON.stringify(countRecords),
@@ -46,6 +42,7 @@ app.get('/games', function (req, res) {
 })
 
 app.get('/game', function (req, res) {
+  log('Request to /game')
   const records = []
 
   db.each("SELECT * FROM games LIMIT 1", function (err, row) {
@@ -63,6 +60,7 @@ app.get('/game', function (req, res) {
 })
 
 app.get('/', function (req, res) {
+  log('Request to /')
   // var game = pug.renderFile('game.pug')
   var html = pug.renderFile(
     'home.pug',
@@ -73,5 +71,5 @@ app.get('/', function (req, res) {
   res.send(html)
 })
 
-console.log('Listening on 3000')
+log('Listening on 3000')
 app.listen(3000)
