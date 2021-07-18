@@ -1,21 +1,21 @@
 div(class='game')
-  h1 #{title}
-
   table
     tr
-      td
+      td(width=200)
         if boxart
-          img(src=boxart)
+          a(href=boxart, target='_blank')
+            img(src=boxart)
         else
-          img(src=horizontalHeaderImage, width=100)
+          a(href=horizontalHeaderImage, target='_blank')
+            img(src=horizontalHeaderImage, width=100)
+        p #{title}
 
-      td
+      td(valign='top')
         p(style={'font-size': '12px'}) #{description}
 
+    tr
       td
-        div
-          div MSRP: #{msrp}
-          div salePrice: #{salePrice}
-          a(href='https://nintendo.com' + url, target='_blank') #{url}
-
-          // #{foo}
+        div MSRP: #{msrp}
+        div salePrice: #{salePrice}
+      td
+        a(href='https://nintendo.com' + url, target='_blank') https://nintendo.com/#{url}
