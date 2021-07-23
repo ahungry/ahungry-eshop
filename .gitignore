@@ -3,3 +3,4 @@
 /data.json
 /*-journal
 /*.db.bak
+/data.*.json

@@ -1,8 +1,15 @@
 div(class='game')
   div(style={'background-image': 'url(' + horizontalHeaderImage + ')'}, class='art')
     div(class='info')
+      if salePrice > 0
+        a(href='https://nintendo.com' + url, target='_blank')
+          strike(class='faded') #{msrp}
+          span &nbsp; &nbsp; $ #{salePrice}
+      else
+        a(href='https://nintendo.com' + url, target='_blank') $ #{msrp}
+
       p #{title}
       div MSRP: #{msrp}
       div salePrice: #{salePrice}
       div publisher: #{publishers}
-      a(href='https://nintendo.com' + url, target='_blank') View
+      div percentOff: #{percentOff}

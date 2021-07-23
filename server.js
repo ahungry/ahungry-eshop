@@ -3,91 +3,50 @@ const pug = require('pug')
 const sqlite3 = require('sqlite3').verbose()
 const db = new sqlite3.Database('./games.db')
 
+const dao = require('./dao')
 const log = console.error
 const app = express()
 
 app.use(express.static('public'))
 
-app.get('/games', function (req, res) {
-  log('Request to /games')
-  const limit = Number(req.query.limit || 10)
-  const offset = Number(req.query.offset || 0)
-  const search_title = req.query.search_title || ''
-  const search_publisher = req.query.search_publisher || ''
-  const records = []
+function withFilters (daoFn) {
+  return async function (req, res) {
+    log('Request to /games')
+    const limit = Number(req.query.limit || 10)
+    const offset = Number(req.query.offset || 0)
+    const search_title = req.query.search_title || ''
+    const search_publisher = req.query.search_publisher || ''
 
-  db.all('select count(*) as count from games', (e, countRecords) => {
-    db.each(
-      `
-SELECT *
-FROM games
-WHERE 1=1
-AND title like ?
-AND publishers like ?
-ORDER BY cast(msrp as float) DESC
-LIMIT ?
-OFFSET ?
-`,
-      [
-  '%' + search_title + '%',
-  '%' + search_publisher + '%',
-  limit,
-  offset,
-],
-      function (err, row) {
-        records.push(row)
-      }, (e, r) => {
-        let gamesHtml = records.reduce((acc, cur) => {
-          var html = pug.renderFile('game.pug', cur)
+    const count = await dao.get_count()
+    const records = await daoFn({ limit, offset, search_publisher, search_title })
 
-          return acc + html
-        }, '')
+    let gamesHtml = records.reduce((acc, cur) => {
+      var html = pug.renderFile('game.pug', cur)
 
-        var html = pug.renderFile('games.pug', {
-          x: JSON.stringify(countRecords),
-          total: countRecords[0].count / limit,
-          y: gamesHtml,
-          gamesHtml,
-          offsetPrev: offset - limit,
-          offsetNext: offset + limit,
-          page: offset / limit,
-          search_publisher,
-          search_title,
-        })
+      return acc + html
+    }, '')
 
-        res.send(html)
-      })
-  })
-})
-
-app.get('/game', function (req, res) {
-  log('Request to /game')
-  const records = []
-
-  db.each("SELECT * FROM games LIMIT 1", function (err, row) {
-    records.push(row)
-  }, (e, r) => {
-    var html = pug.renderFile(
-      'game.pug',
-      {
-        ...records[0],
-        foo: JSON.stringify(records),
-      })
+    var html = pug.renderFile('games.pug', {
+      total: count / limit,
+      y: gamesHtml,
+      gamesHtml,
+      offsetPrev: offset - limit,
+      offsetNext: offset + limit,
+      page: offset / limit,
+      search_publisher,
+      search_title,
+    })
 
     res.send(html)
-  })
+  }
+}
+
+app.get('/sales', async function (req, res) {
+  await withFilters(dao.get_games_on_sale)(req, res)
 })
 
-app.get('/', function (req, res) {
-  log('Request to /')
-  // var game = pug.renderFile('game.pug')
-  var html = pug.renderFile(
-    'home.pug',
-    {
-      foo: '<b>woot</b>',
-      youAreUsingPug: true,
-    });
-  res.send(html)
+app.get('/', async function (req, res) {
+  await withFilters(dao.get_games)(req, res)
 })
 
 log('Listening on 3000')
