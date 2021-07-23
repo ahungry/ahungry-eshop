@@ -34,7 +34,7 @@ div.game {
   background: #fff;
   color: #666;
   display: inline-block;
-  margin: 20px;
+  margin: 10px;
   z-index: 1;
   width: 300px;
   height: 150px;
@@ -79,4 +79,15 @@ div.game {
 
 .faded {
   opacity: 0.5;
+}
+
+nav {
+  background: #333;
+  display: block;
+  margin: 10px;
+}
+
+nav a {
+  display: inline-block;
+  font-size: 0.8rem;
 }

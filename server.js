@@ -1,3 +1,4 @@
+const path = require('path')
 const express = require('express')
 const pug = require('pug')
 const sqlite3 = require('sqlite3').verbose()
@@ -8,6 +9,14 @@ const log = console.error
 const app = express()
 
 app.use(express.static('public'))
+
+// BEGIN: Stuff to keep browser refreshed on changes
+const livereload = require('livereload')
+const liveReloadServer = livereload.createServer()
+liveReloadServer.watch(path.join(__dirname, 'public'))
+const connectLivereload = require('connect-livereload')
+app.use(connectLivereload())
+// END: Stuff to keep browser refreshed on changes
 
 function withFilters (daoFn) {
   return async function (req, res) {
