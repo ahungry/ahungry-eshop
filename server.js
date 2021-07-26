@@ -27,7 +27,7 @@ liveReloadServer.server.once('connection', () => {
 function withFilters (daoFn) {
   return async function (req, res) {
     log('Request to /games')
-    const limit = Number(req.query.limit || 10)
+    const limit = Number(req.query.limit || 50)
     const offset = Number(req.query.offset || 0)
     const search_title = req.query.search_title || ''
     const search_publisher = req.query.search_publisher || ''
@@ -36,12 +36,12 @@ function withFilters (daoFn) {
     const records = await daoFn({ limit, offset, search_publisher, search_title })
 
     let gamesHtml = records.reduce((acc, cur) => {
-      var html = pug.renderFile('game.pug', cur)
+      var html = pug.renderFile('views/game.pug', cur)
 
       return acc + html
     }, '')
 
-    var html = pug.renderFile('games.pug', {
+    var html = pug.renderFile('views/games.pug', {
       total: count / limit,
       y: gamesHtml,
       gamesHtml,
@@ -55,6 +55,10 @@ function withFilters (daoFn) {
     res.send(html)
   }
 }
+
+app.get('/savings', async function (req, res) {
+  await withFilters(dao.get_games_on_sale_dollar)(req, res)
+})
 
 app.get('/sales', async function (req, res) {
   await withFilters(dao.get_games_on_sale)(req, res)

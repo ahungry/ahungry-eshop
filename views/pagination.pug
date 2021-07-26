@@ -1,0 +1,10 @@
+// Pagination stuff
+div(class='pagination')
+  a(href='?limit=50&offset=' + offsetPrev + '&search=' + search) prev
+  span page #{page} / #{total}
+  a(href='?limit=50&offset=' + offsetNext + '&search=' + search) next
+
+nav
+  a(href='/') Price High to Low
+  a(href='/sales') Best Sales (percent)
+  a(href='/savings') Best Savings ($)

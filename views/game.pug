@@ -12,4 +12,5 @@ div(class='game')
       div MSRP: #{msrp}
       div salePrice: #{salePrice}
       div publisher: #{publishers}
-      div percent off: #{percentOff}
+      div percent off: #{Number(percentOff).toFixed(2)} %
+      div savings: $ #{savings}
