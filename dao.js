@@ -1,14 +1,14 @@
 const sqlite3 = require('sqlite3').verbose()
 const db = new sqlite3.Database('./games.db')
 
-function query (sql, args, eachFn = () => true) {
+function query (sql, args, eachFn = (_) => true) {
   const records = []
 
   return new Promise((resolve, reject) => {
     db.each(
       sql,
       args,
-      (err, row) => { eachFn() && records.push(row) }, // fn on each
+      (err, row) => { eachFn(row) && records.push(row) }, // fn on each
       (err, res) => { // fn at end
         if (err) return reject(err)
 
@@ -24,10 +24,19 @@ async function get_count (where = '', args = []) {
 }
 
 function get_records (where = '', args = []) {
+  const transformerFn = (row) => {
+    // Found these inputs: c_pad,f_auto,q_auto,w_400
+    // Resize the headers for faster loading.
+    row['horizontalHeaderImage'] = String(row['horizontalHeaderImage'])
+      .replace('upload/ncom', 'upload/w_300/ncom')
+
+    return true
+  }
+
   return query(`select *,
 100 * (1 - (cast(salePrice as float)/cast(msrp as float))) as percentOff,
 (cast(msrp as float) - cast(salePrice as float)) as savings
-from games WHERE 1=1 ` + where, args)
+from games WHERE 1=1 ` + where, args, transformerFn)
 }
 
 function get_games ({ limit, offset, search_title, search_publisher } = {}) {
