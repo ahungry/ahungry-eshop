@@ -68,5 +68,5 @@ app.get('/', async function (req, res) {
   await withFilters(dao.get_games)(req, res)
 })
 
-log('Listening on 3000')
-app.listen(3000)
+log('Listening on 3001')
+app.listen(3001)
