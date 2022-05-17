@@ -89,10 +89,29 @@ OFFSET ?
   )
 }
 
+async function get_last_updates () {
+  const api_import = await query(
+    `SELECT date FROM last_updates WHERE name = 'api' `,
+    [],
+  )
+  const api_import_date = api_import[0]['date']
+  const _newest_game_date = await query(
+    `select datetime(substr(max(lastModified), 0, 11), 'unixepoch', 'localtime') as x from games;`,
+    [],
+  )
+  const newest_game_date = new Date(_newest_game_date[0]['x'])
+
+  return {
+    api_import_date,
+    newest_game_date,
+  }
+}
+
 module.exports = {
   get_count,
   get_games,
   get_games_on_sale,
   get_games_on_sale_dollar,
+  get_last_updates,
   get_records,
 }

@@ -34,6 +34,7 @@ function withFilters (daoFn) {
 
     const count = await dao.get_count()
     const records = await daoFn({ limit, offset, search_publisher, search_title })
+    const updates = await dao.get_last_updates()
 
     let gamesHtml = records.reduce((acc, cur) => {
       var html = pug.renderFile('views/game.pug', cur)
@@ -50,6 +51,7 @@ function withFilters (daoFn) {
       page: offset / limit,
       search_publisher,
       search_title,
+      updates,
     })
 
     res.send(html)
