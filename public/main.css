@@ -30,13 +30,13 @@ div.pagination a {
 div.game {
   border-radius: 2px;
   box-shadow: 3px 3px 6px #000;
-  background: #fff;
+  background: #000;
   color: #666;
   display: inline-block;
   margin: 10px;
   z-index: 1;
   width: 300px;
-  height: 150px;
+  height: 160px;
   overflow: hidden;
 }
 
@@ -63,9 +63,9 @@ div.game {
   background: rgba(0,0,0,0.0);
   color: rgba(0,0,0,0.0);
   width: 300px;
-  height: 150px;
+  height: 160px;
   padding: 0px;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   text-align: center;
 }
 
@@ -88,4 +88,8 @@ nav {
 nav a {
   display: inline-block;
   font-size: 0.8rem;
+}
+
+.lastUpdates {
+  font-size: 0.7rem;
 }

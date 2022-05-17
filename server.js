@@ -58,6 +58,14 @@ function withFilters (daoFn) {
   }
 }
 
+app.get('/newest', async function (req, res) {
+  await withFilters(dao.get_games_by_date)(req, res)
+})
+
+app.get('/cheapest', async function (req, res) {
+  await withFilters(dao.get_games_cheapest)(req, res)
+})
+
 app.get('/savings', async function (req, res) {
   await withFilters(dao.get_games_on_sale_dollar)(req, res)
 })

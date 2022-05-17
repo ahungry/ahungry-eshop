@@ -33,9 +33,10 @@ function get_records (where = '', args = []) {
     return true
   }
 
-  return query(`select *,
-100 * (1 - (cast(salePrice as float)/cast(msrp as float))) as percentOff,
-(cast(msrp as float) - cast(salePrice as float)) as savings
+  return query(`select *
+, 100 * (1 - (cast(salePrice as float)/cast(msrp as float))) as percentOff
+, (cast(msrp as float) - cast(salePrice as float)) as savings
+, datetime(substr(lastModified, 0, 11), 'unixepoch', 'localtime') as lastUpdatedDate
 from games WHERE 1=1 ` + where, args, transformerFn)
 }
 
@@ -44,6 +45,40 @@ function get_games ({ limit, offset, search_title, search_publisher } = {}) {
     `AND title like ?
 AND publishers like ?
 ORDER BY cast(msrp as float) DESC
+LIMIT ?
+OFFSET ?
+`,
+    ['%' + search_title + '%',
+     '%' + search_publisher + '%',
+     limit,
+     offset,
+    ]
+  )
+}
+
+function get_games_cheapest ({ limit, offset, search_title, search_publisher } = {}) {
+  return get_records(
+    `AND msrp > -1
+AND title like ?
+AND publishers like ?
+ORDER BY msrp ASC
+LIMIT ?
+OFFSET ?
+`,
+    ['%' + search_title + '%',
+     '%' + search_publisher + '%',
+     limit,
+     offset,
+    ]
+  )
+}
+
+function get_games_by_date ({ limit, offset, search_title, search_publisher } = {}) {
+  return get_records(
+    `AND salePrice > 0
+AND title like ?
+AND publishers like ?
+ORDER BY lastModified DESC
 LIMIT ?
 OFFSET ?
 `,
@@ -110,6 +145,8 @@ async function get_last_updates () {
 module.exports = {
   get_count,
   get_games,
+  get_games_by_date,
+  get_games_cheapest,
   get_games_on_sale,
   get_games_on_sale_dollar,
   get_last_updates,
